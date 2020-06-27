@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from HelloWorld!');
+		vscode.window.showInformationMessage('Hello VS Code from HelloWorld!');
 	});
 
 	context.subscriptions.push(disposable);
