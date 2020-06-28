@@ -2,8 +2,13 @@
 	"name": "helloworld",
 	"publisher": "shinjini-ghosh",
 	"displayName": "HelpMe",
-	"description": "",
-	"version": "0.0.4",
+	"description": "Access frequently used helper code links without leaving VS Code",
+	"version": "0.0.5",
+	"icon": "images/logo.png",
+	"galleryBanner": {
+		"color": "#C80000",
+		"theme": "light"
+	},
 	"engines": {
 		"vscode": "^1.46.0"
 	},
@@ -51,6 +56,12 @@
 		"type": "git",
 		"url": "https://github.com/shinjinighosh/helpme-vscode-extension"
 	},
-	"license": "See license in LICENSE"
+	"license": "See license in LICENSE",
+	"bugs": {
+		"url": "https://github.com/shinjinighosh/helpme-vscode-extension/issues",
+		"email": "shinghos@mit.edu"
+	},
+	"homepage": "https://github.com/shinjinighosh/helpme-vscode-extension/blob/master/README.md"
+
 
 }

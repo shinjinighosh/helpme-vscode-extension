@@ -5,7 +5,7 @@ This is the README for our extension "helpme", a VS Code extension created by [S
 ## Features
 
 Tired of retyping the same errors into Google and StackOverflow? Can't remember the one amazing link you once used for an elegant one-liner?
-Helpme is here to save the day!
+Helpme is here to save the day! Bookmark useful questions and their corresponding links and look them up whenever you need them later. Check out a demo of our project on [YouTube](https://youtu.be/bYsBlOwfJsc).
 
 To add a question, simply type `+` and enter the question details and link:
 
@@ -29,7 +29,7 @@ The project dependencies include
 "path": "^0.12.7"
 ```
 
-and can be installed by running `npm install .` after cloning the extension repo.
+and can be installed by running `npm install` after cloning the extension repo or installing it from the Microsoft Marketplace.
 
 <!-- ## Extension Settings
 
