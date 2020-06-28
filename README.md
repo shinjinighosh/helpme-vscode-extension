@@ -48,7 +48,7 @@ This extension contributes the following settings:
 
 Will be updated!
 
-### 1.0.0
+### 0.0.1
 
-Initial release of helpme!
+Initial release of helpme! Published on the Microsoft Marketplace [here](https://marketplace.visualstudio.com/items?itemName=shinjini-ghosh.helloworld).
 
