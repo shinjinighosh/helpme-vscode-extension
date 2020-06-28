@@ -1,6 +1,6 @@
 # helpme README
 
-This is the README for our extension "helpme".
+This is the README for our extension "helpme", a VS Code extension created by [Shinjini Ghosh](https://github.com/shinjinighosh) and [Raul Alcantara](https://github.com/ralcant) for the Microsoft VS Code Hakathon.
 
 ## Features
 
