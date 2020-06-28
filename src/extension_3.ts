@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
     }  
 
     function updateJSON(question: any, url: any){
-        console.log("Trying to update JSON...")
+        console.log("Trying to update JSON...");
 
         const fullPath = path.join(fileDir, 'question_map.json');
 
@@ -49,10 +49,10 @@ export function activate(context: vscode.ExtensionContext) {
             keywords: remove_stopwords(question)
         };
         let fullData;
-        console.log("json file defined, starting to write")
+        console.log("json file defined, starting to write");
         // jsonfile.writeFileSync(fullPath, newQuestion, { EOL:'\r\n', flag: 'a' });
         // require(fullPath)
-        console.log("finished writing!")
+        console.log("finished writing!");
 
         fs.readFile(fullPath, function (err: any, data: string) {
             console.log("got into readfile");
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
                     questions: [
                         newQuestion
                     ]
-                }
+                };
                 console.log("did not find file");
                 fullData = important_json;
             }
@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
                 console.log("data: "+data);
                 let json = JSON.parse(data);
                 json.questions.push(newQuestion);
-                fullData = json //JSON.stringify(json); //cannot stringify
+                fullData = json; //JSON.stringify(json); //cannot stringify
 
             }
             let formatted_data = JSON.stringify(fullData, null, 3); //to be more readable
@@ -148,7 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
             // console.log("all questions are: "+ all_questions.questions);
             return all_questions.questions.map(
                 question => getQuestion(question.display_name, question.link)
-            )
+            );
 		}
     }, "#");
     // vscode.commands.registerCommand
