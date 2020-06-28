@@ -9,8 +9,10 @@ Helpme is here to save the day!
 
 For example if there is an image subfolder under your extension project workspace:
 
-
-![Adding a question](https://i.imgur.com/N81PYJT.png)|(https://i.imgur.com/cUEg6zp.png)|(https://i.imgur.com/jM3GGqv.png)
+|  Triggering question add | Adding question details | Adding euestion URL |
+| :-----------------------------------: | :------------------------------------------------: | :------------------------------------------------: |
+| ![1](https://i.imgur.com/N81PYJT.png) |        ![2](https://i.imgur.com/cUEg6zp.png)       | ![3](https://i.imgur.com/jM3GGqv.png)|
+<!-- ![Adding a question](https://i.imgur.com/N81PYJT.png)|(https://i.imgur.com/cUEg6zp.png)|(https://i.imgur.com/jM3GGqv.png) -->
 
 ## Requirements
 
