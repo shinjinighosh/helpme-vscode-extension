@@ -48,7 +48,7 @@ This extension contributes the following settings:
 
 ## Release Notes
 
-Will be updated!
+Will be updated.
 
 ### 0.0.1
 
