@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
     // });
     let showBox = vscode.commands.registerCommand("helloworld.showBox", ()=>{
         showMessageBox();
-    })
+    });
     function showMessageBox(){
         let questionInputBox = vscode.window.createInputBox();
         questionInputBox.busy = true;
@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.env.openExternal(vscode.Uri.parse(url));
         
         showMessageBox();
-    })
+    });
     function getQuestion(question: string, link: string){ //TODO: maybe point to stackoverflow instead? 
         let browserCompleter = new vscode.CompletionItem(question);
         browserCompleter.kind = vscode.CompletionItemKind.Event;
@@ -73,9 +73,9 @@ export function activate(context: vscode.ExtensionContext) {
                 command: "helloworld.showBox",
                 // arguments: [link],
                 title: "See it on the web...again?" // probably useless idk
-            }
+            };
             completion.insertText = ""; //dont insert any text
-            return [completion]
+            return [completion];
         }
         }, "+");
     const searcher = vscode.languages.registerCompletionItemProvider('plaintext', {
@@ -102,10 +102,10 @@ export function activate(context: vscode.ExtensionContext) {
                         ]
                     }
                 ]
-            }
+            };
             return INFO.all_questions.map(
                 question => getQuestion(question.display_name, question.link)
-                )
+                );
 		}
     }, "#");
     // vscode.commands.registerCommand
@@ -114,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
         // console.log("ahhh");
         // let value = vscode.window.showInputBox();
         // console.log("This is what was inputted:" + value);
-    })
+    });
 	context.subscriptions.push(finder, searcher, openBrowser, hack, showBox);
 }
 
