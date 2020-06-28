@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { open } from 'fs';
+import path = require('path');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -23,15 +24,39 @@ export function activate(context: vscode.ExtensionContext) {
     let showBox = vscode.commands.registerCommand("helloworld.showBox", ()=>{
         showMessageBox();
     });
+
     const fileDir = context.globalStoragePath;
     console.log(fileDir);
+
     var fs = require('fs');
     if (!fs.existsSync(fileDir)){
     fs.mkdirSync(fileDir);
     }
+
     function updateJSON(question: any, url: any){
+        let student = { 
+            name: 'Mike',
+            age: 23, 
+            gender: 'Male',
+            department: 'English',
+            car: 'Honda' 
+        };
+         
+        let data = JSON.stringify(student);
+
+        const fullPath = path.join(fileDir, 'question_map.json');
+        fs.writeFileSync(fullPath, data, function(err: any) {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("The file was saved!");
+            }
+        });
+
+        console.log("Should have written or not?");
         return true;
     }
+    
     function showMessageBox(){
         let questionInputBox = vscode.window.createInputBox();
         questionInputBox.busy = true;
