@@ -190,7 +190,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
         }, "+");
     const searcher = vscode.languages.registerCompletionItemProvider('plaintext', {
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+		async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
             const jsonfile = require('jsonfile');
             const fullPath = path.join(fileDir, 'question_map.json');
             let questions = [
@@ -202,14 +202,15 @@ export function activate(context: vscode.ExtensionContext) {
                            "question"
                        ]
                     }];
-            fs.readFileSync(fullPath, function (err: any, fileData: any) {
+            
+            // const fileUri = context.globalStoragePath.with({ path: posix.join(folderUri.path, 'test.txt') });
+            // const fileData = await vscode.workspace.fs.readFile(fullPath);
+
+            fs.readFile(fullPath, function (err: any, fileData: any) {
                 console.log("reading file");
                 if (err) {console.error(err);}
                 questions = fileData.split('\r\n');
                 console.log(questions);
-                // questions = obj;
-                // console.log(obj);
-                // console.dir(obj);
               });
 
             let INFO = { //TODO: find the right questions
