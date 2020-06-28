@@ -1,5 +1,6 @@
 {
 	"name": "helloworld",
+	"publisher": "shinjini-ghosh",
 	"displayName": "HelloWorld",
 	"description": "",
 	"version": "0.0.1",
@@ -45,5 +46,9 @@
 	"dependencies": {
 		"jsonfile": "^6.0.1",
 		"path": "^0.12.7"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/shinjinighosh/helpme-vscode-extension"
+	  }
 }

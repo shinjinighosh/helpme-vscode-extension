@@ -42,7 +42,7 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-- Loading the question mappings takes a long time.
+- We will change the trigger command from hello world to helpme soon!
 
 ## Release Notes
 
