@@ -15,6 +15,8 @@ To add a question, simply type `+` and enter the question details and link:
 
 
 To search added questions, type `#` and choose from the autocomplete dropdown.
+
+
 |  Triggering question search | Searching questions list |
 | :-----------------------------------: | :------------------------------------------------: |
 | ![1](https://i.imgur.com/OH24Pty.png) |        ![2](https://i.imgur.com/S9lnWqE.png)       | 
