@@ -23,6 +23,15 @@ export function activate(context: vscode.ExtensionContext) {
     let showBox = vscode.commands.registerCommand("helloworld.showBox", ()=>{
         showMessageBox();
     });
+    const fileDir = context.globalStoragePath;
+    console.log(fileDir);
+    var fs = require('fs');
+    if (!fs.existsSync(fileDir)){
+    fs.mkdirSync(fileDir);
+    }
+    function updateJSON(question: any, url: any){
+        return true;
+    }
     function showMessageBox(){
         let questionInputBox = vscode.window.createInputBox();
         questionInputBox.busy = true;
@@ -38,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
             linkInputBox.onDidAccept(()=>{
                 console.log("question: "  + question);
                 console.log("link used: " + linkInputBox.value);
+                updateJSON(question, linkInputBox.value);
                 linkInputBox.hide();
             });
             linkInputBox.ignoreFocusOut = true; //so that when it goes 
@@ -48,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
     // vscode.commands.
     let openBrowser = vscode.commands.registerCommand("helloworld.openBrowser", (url)=>{
-        // vscode.window.showInformationMessage("openeeed!");
+        // vscode.window.showInformationMessage("openeeed");
         // vscode.env.openExternal(Uri.parse(url));
         console.log("vscode:"+ vscode.Uri.parse(url));
         vscode.env.openExternal(vscode.Uri.parse(url));
@@ -111,6 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
     // vscode.commands.registerCommand
     const finder = vscode.commands.registerCommand("helloworld.helloWorld",
     ()=>{
+        vscode.window.showInformationMessage("You are now using helpme extension!");
         // console.log("ahhh");
         // let value = vscode.window.showInputBox();
         // console.log("This is what was inputted:" + value);
