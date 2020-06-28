@@ -9,7 +9,7 @@ Helpme is here to save the day!
 
 For example if there is an image subfolder under your extension project workspace:
 
-\!\[Adding a question\]\(images/stage_1.png\)|\(images/stage_2.png\)|\(images/stage_3.png\)
+![Adding a question](../images/stage_1.png)|(../images/stage_2.png)|(../images/stage_3.png)
 
 ## Requirements
 
