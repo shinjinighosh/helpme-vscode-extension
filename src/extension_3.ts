@@ -33,49 +33,52 @@ export function activate(context: vscode.ExtensionContext) {
     fs.mkdirSync(fileDir);
     }
 
-    function updateJSON(question: any, url: any){
+    async function updateJSON(question: any, url: any){
+
         const fullPath = path.join(fileDir, 'question_map.json');
 
         let newQuestion = {
-            display_name: "What time is it with python",
-            link:  "https://www.google.com/search?q=What time is it with python",
-            keywords: [
-                "time", 
-                "question"
-            ]
+            display_name: question,
+            link:  url,
+            keywords: question.split()
         };
 
         let newData = JSON.stringify(newQuestion);
+        let fullData;
+        
+        
+        fs.appendFile(fullPath, newData , function (err: any) {
+            if (err) {throw err;}
+            console.log('The "data to append" was appended to file!');
+         });
 
-        fs.readFile(fullPath, function (err: any, data: string) {
-            console.log("got into readfile");
-            if (err){ 
-                console.log("did not find file");
-                let fullData = newData;
-                console.log(fullData);
-                fs.writeFile(fullPath, fullData, function(err: any) {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        console.log("The new file was saved!");
-                    }
-            }); 
-            }
-            else {
-                var json = JSON.parse(data);
-                json.push(newData);
-                let fullData = JSON.stringify(json);
-                console.log(fullData);
-                fs.writeFile(fullPath, fullData, function(err: any) {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        console.log("The file was appended to and saved!");
-                    }
-            });
-            // fs.writeFile("results.json", JSON.stringify(json))
-            }
-        });
+
+
+        // fs.readFile(fullPath, function (err: any, data: string) {
+        //     console.log("got into readfile");
+        //     if (err){ 
+        //         console.log("did not find file");
+        //         fullData = newData;
+        //     }
+        //     else {
+        //         console.log("Found file");
+        //         var json = JSON.parse(data);
+        //         json.push(newData);
+        //         fullData = JSON.stringify(json);
+
+        //     // fs.writeFile("results.json", JSON.stringify(json))
+        //     }
+        //     console.log(fullData);
+        //     fs.writeFile(fullPath, fullData, function(err: any) {
+        //         if(err) {
+        //             console.log(err);
+        //         } else {
+        //             console.log("The file was saved!");
+        //         }
+        //     });
+        // });
+
+        
         
         // let student = { 
         //     name: 'Mike',
@@ -94,6 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
         //         console.log("The file was saved!");
         //     }
         // });
+
         console.log("Should have written to globalStorage");
         return true;
     }
@@ -144,7 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
     const hack = vscode.languages.registerCompletionItemProvider('plaintext', {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
             let completion = new vscode.CompletionItem("Add a question!");
-            completion.kind = vscode.CompletionItemKind.Event
+            completion.kind = vscode.CompletionItemKind.Event;
             completion.command = {
                 command: "helloworld.showBox",
                 // arguments: [link],

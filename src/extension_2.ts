@@ -68,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
     const hack = vscode.languages.registerCompletionItemProvider('plaintext', {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
             let completion = new vscode.CompletionItem("Add a question!");
-            completion.kind = vscode.CompletionItemKind.Event
+            completion.kind = vscode.CompletionItemKind.Event;
             completion.command = {
                 command: "helloworld.showBox",
                 // arguments: [link],
