@@ -3,14 +3,35 @@
 import * as vscode from 'vscode';
 import { open } from 'fs';
 import path = require('path');
+// import jsonfile = require('jsonfile');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "helloworld" is now active!');
+    // This line of code will only be executed once when your extension is activated
+    console.log('Congratulations, your extension "helloworld" is now active!');
+    // const fileDirectory = context.globalStoragePath;
+    // const fullPath = path.join(fileDirectory, 'question_map.json');
+    // let questions = [
+    //     {
+    //        display_name: "What time is it with python",
+    //        link:  "https://www.google.com/search?q=What time is it with python",
+    //        keywords: [
+    //            "time", 
+    //            "question"
+    //        ]
+    //     }];
+    // fs.readFileSync(fullPath, function (err: any, fileData: any) {
+    //     console.log("reading file");
+    //     if (err) {console.error(err);}
+    //     questions = fileData.split('\r\n');
+    //     console.log(questions);
+    //     // questions = obj;
+    //     // console.log(obj);
+    //     // console.dir(obj);
+    // });
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -33,25 +54,54 @@ export function activate(context: vscode.ExtensionContext) {
     fs.mkdirSync(fileDir);
     }
 
-    async function updateJSON(question: any, url: any){
+    const stopwords = ['i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now'];
+
+
+    function remove_stopwords(str: String) {
+        const res = [];
+        const words = str.split(' ');
+        for(var i = 0; i < words.length; i++) {
+           const word_clean = words[i].split(".").join("");
+           if(!stopwords.includes(word_clean)) {
+               res.push(word_clean);
+           }
+        }
+        return(res);
+    }  
+
+    function updateJSON(question: any, url: any){
 
         const fullPath = path.join(fileDir, 'question_map.json');
 
         let newQuestion = {
             display_name: question,
             link:  url,
-            keywords: question.split()
+            keywords: remove_stopwords(question)
         };
 
         let newData = JSON.stringify(newQuestion);
         let fullData;
         
         
-        fs.appendFile(fullPath, newData , function (err: any) {
-            if (err) {throw err;}
-            console.log('The "data to append" was appended to file!');
-         });
+        // fs.appendFile(fullPath, newData , function (err: any) {
+        //     if (err) {throw err;}
+        //     console.log('The new data was appended to file!');
+        //  });
 
+
+        // fs.readFile(fullPath, function (err: any, data: string) {
+        //     console.log("going into readfile");
+        //     var json = JSON.parse(data);
+        //     json.push(newData);    
+        //     fs.writeFile(fullPath, JSON.stringify(json), function(err: any){
+        //       console.log("going into write file");
+        //       if (err) {throw err;}
+        //       console.log('The data was appended to file!');
+        //     });
+        // });
+
+        const jsonfile = require('jsonfile');
+        jsonfile.writeFileSync(fullPath, newQuestion, { EOL:'\r\n', flag: 'a' });
 
 
         // fs.readFile(fullPath, function (err: any, data: string) {
@@ -79,25 +129,6 @@ export function activate(context: vscode.ExtensionContext) {
         // });
 
         
-        
-        // let student = { 
-        //     name: 'Mike',
-        //     age: 23, 
-        //     gender: 'Male',
-        //     department: 'English',
-        //     car: 'Honda' 
-        // };
-         
-        // let data = JSON.stringify(student);
-
-        // fs.writeFile(fullPath, newData, function(err: any) {
-        //     if(err) {
-        //         console.log(err);
-        //     } else {
-        //         console.log("The file was saved!");
-        //     }
-        // });
-
         console.log("Should have written to globalStorage");
         return true;
     }
@@ -160,9 +191,9 @@ export function activate(context: vscode.ExtensionContext) {
         }, "+");
     const searcher = vscode.languages.registerCompletionItemProvider('plaintext', {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
-            let INFO = { //TODO: find the right questions
-                description: "This contains all questions and their respective links",
-                all_questions: [
+            const jsonfile = require('jsonfile');
+            const fullPath = path.join(fileDir, 'question_map.json');
+            let questions = [
                     {
                        display_name: "What time is it with python",
                        link:  "https://www.google.com/search?q=What time is it with python",
@@ -170,18 +201,40 @@ export function activate(context: vscode.ExtensionContext) {
                            "time", 
                            "question"
                        ]
-                    },
-                    {
-                        display_name: "How much is 2 plus 2?",
-                        link: "https://www.google.com/search?q=How much is 2 plus 2",
-                        keywords:[
-                            "add",
-                            "sum",
-                            "+",
-                            "2+2"
-                        ]
-                    }
-                ]
+                    }];
+            fs.readFileSync(fullPath, function (err: any, fileData: any) {
+                console.log("reading file");
+                if (err) {console.error(err);}
+                questions = fileData.split('\r\n');
+                console.log(questions);
+                // questions = obj;
+                // console.log(obj);
+                // console.dir(obj);
+              });
+
+            let INFO = { //TODO: find the right questions
+                description: "This contains all questions and their respective links",
+                all_questions: questions
+                // all_questions: [
+                //     {
+                //        display_name: "What time is it with python",
+                //        link:  "https://www.google.com/search?q=What time is it with python",
+                //        keywords: [
+                //            "time", 
+                //            "question"
+                //        ]
+                //     },
+                //     {
+                //         display_name: "How much is 2 plus 2?",
+                //         link: "https://www.google.com/search?q=How much is 2 plus 2",
+                //         keywords:[
+                //             "add",
+                //             "sum",
+                //             "+",
+                //             "2+2"
+                //         ]
+                //     }
+                // ]
             };
             return INFO.all_questions.map(
                 question => getQuestion(question.display_name, question.link)
