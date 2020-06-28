@@ -9,7 +9,8 @@ Helpme is here to save the day!
 
 For example if there is an image subfolder under your extension project workspace:
 
-![Adding a question](../images/stage_1.png)|(../images/stage_2.png)|(../images/stage_3.png)
+
+![Adding a question](https://i.imgur.com/N81PYJT.png)|(https://i.imgur.com/cUEg6zp.png)|(https://i.imgur.com/jM3GGqv.png)
 
 ## Requirements
 
