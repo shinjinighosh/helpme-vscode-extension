@@ -3,17 +3,12 @@
 import * as vscode from 'vscode';
 import { open } from 'fs';
 import path = require('path');
+import { type } from 'os';
 // import jsonfile = require('jsonfile');
 
 // this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "helloworld" is now active!');
-    // const fileDirectory = context.globalStoragePath;
-    // const fullPath = path.join(fileDirectory, 'question_map.json');
+// your extension is activated the very first time the command is executed
     // let questions = [
     //     {
     //        display_name: "What time is it with python",
@@ -33,21 +28,19 @@ export function activate(context: vscode.ExtensionContext) {
     //     // console.dir(obj);
     // });
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	// let disposable = vscode.commands.registerCommand('helloworld.helloWorld', () => {
-	// 	// The code you place here will be executed every time your command is executed
+export function activate(context: vscode.ExtensionContext) {
 
-	// 	// Display a message box to the user
-	// 	vscode.window.showInformationMessage('Hello VS Code from another extension again!');
-    // });
+	// Use the console to output diagnostic information (console.log) and errors (console.error)
+    // This line of code will only be executed once when your extension is activated
+    console.log('Congratulations, your extension "helloworld" is now active!');
+    // const fileDirectory = context.globalStoragePath;
+    // const fullPath = path.join(fileDirectory, 'question_map.json');
     let showBox = vscode.commands.registerCommand("helloworld.showBox", ()=>{
         showMessageBox();
     });
 
     const fileDir = context.globalStoragePath;
-    console.log(fileDir);
+    console.log("filedir: "+ fileDir);
 
     var fs = require('fs');
     if (!fs.existsSync(fileDir)){
@@ -70,6 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
     }  
 
     function updateJSON(question: any, url: any){
+        console.log("Trying to update JSON...")
 
         const fullPath = path.join(fileDir, 'question_map.json');
 
@@ -82,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
         let newData = JSON.stringify(newQuestion);
         let fullData;
         
-        
+        console.log("new data: " + newData)
         // fs.appendFile(fullPath, newData , function (err: any) {
         //     if (err) {throw err;}
         //     console.log('The new data was appended to file!');
@@ -99,34 +93,36 @@ export function activate(context: vscode.ExtensionContext) {
         //       console.log('The data was appended to file!');
         //     });
         // });
-
         const jsonfile = require('jsonfile');
-        jsonfile.writeFileSync(fullPath, newQuestion, { EOL:'\r\n', flag: 'a' });
+        console.log("json file defined, starting to write")
+        // jsonfile.writeFileSync(fullPath, newQuestion, { EOL:'\r\n', flag: 'a' });
+        // require(fullPath)
+        console.log("finished writing!")
 
+        fs.readFile(fullPath, function (err: any, data: string) {
+            console.log("got into readfile");
+            if (err){ 
+                console.log("did not find file");
+                fullData = newData;
+            }
+            else {
+                console.log("Found file");
+                var json = JSON.parse(data);
+                console.log(json);
+                json.questions.push(newData);
+                fullData = JSON.stringify(json);
 
-        // fs.readFile(fullPath, function (err: any, data: string) {
-        //     console.log("got into readfile");
-        //     if (err){ 
-        //         console.log("did not find file");
-        //         fullData = newData;
-        //     }
-        //     else {
-        //         console.log("Found file");
-        //         var json = JSON.parse(data);
-        //         json.push(newData);
-        //         fullData = JSON.stringify(json);
-
-        //     // fs.writeFile("results.json", JSON.stringify(json))
-        //     }
-        //     console.log(fullData);
-        //     fs.writeFile(fullPath, fullData, function(err: any) {
-        //         if(err) {
-        //             console.log(err);
-        //         } else {
-        //             console.log("The file was saved!");
-        //         }
-        //     });
-        // });
+            // fs.writeFile("results.json", JSON.stringify(json))
+            }
+            console.log(fullData);
+            fs.writeFile(fullPath, fullData, function(err: any) {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("The file was saved!");
+                }
+            });
+        });
 
         
         console.log("Should have written to globalStorage");
@@ -164,9 +160,11 @@ export function activate(context: vscode.ExtensionContext) {
         console.log("vscode:"+ vscode.Uri.parse(url));
         vscode.env.openExternal(vscode.Uri.parse(url));
         
-        showMessageBox();
+        // showMessageBox();
     });
     function getQuestion(question: string, link: string){ //TODO: maybe point to stackoverflow instead? 
+        // let question = question_obj.display_name;
+        // let link = question_obj.link;
         let browserCompleter = new vscode.CompletionItem(question);
         browserCompleter.kind = vscode.CompletionItemKind.Event;
         browserCompleter.command = {
@@ -190,56 +188,48 @@ export function activate(context: vscode.ExtensionContext) {
         }
         }, "+");
     const searcher = vscode.languages.registerCompletionItemProvider('plaintext', {
-		async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+	    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
             const jsonfile = require('jsonfile');
             const fullPath = path.join(fileDir, 'question_map.json');
-            let questions = [
-                    {
-                       display_name: "What time is it with python",
-                       link:  "https://www.google.com/search?q=What time is it with python",
-                       keywords: [
-                           "time", 
-                           "question"
-                       ]
-                    }];
-            
             // const fileUri = vscode.ExtensionContext.globalStoragePath.with({ path: posix.join(folderUri.path, 'test.txt') });
             // const fileData = await vscode.workspace.fs.readFile(fullPath);
-
-            fs.readFile(fullPath, function (err: any, fileData: any) {
+            // function get
+            // let all_questions = jsonfile.readFileSync(fullPath);
+            // console.log("all questions are: "+ all_questions.questions);
+            // return all_questions.questions.map(
+            //     question => getQuestion(question.display_name, question.link)
+            // )
+            fs.readFile(fullPath, function (err, fileData) {
+                fileData = JSON.parse(fileData);
                 console.log("reading file");
+                console.log(typeof fileData["questions"]);
+                console.log(fileData["questions"])
+                
+                console.log("questions: "+fileData);
                 if (err) {console.error(err);}
-                questions = fileData.split('\r\n');
-                console.log(questions);
-              });
+                // const questions = fileData.questions.split('\r\n');
+                // console.log(questions);
+                // Map<Object, Array<Object>> all_questions = fileData.question;
+                // let all_results = []
+                // foreach
+                // fileData.question.forEach(q => {
+                //     Object question = q;
+                //     all_result.push(getQuestion(question.display_name, question.link))
+                // });
 
-            let INFO = { //TODO: find the right questions
-                description: "This contains all questions and their respective links",
-                all_questions: questions
-                // all_questions: [
-                //     {
-                //        display_name: "What time is it with python",
-                //        link:  "https://www.google.com/search?q=What time is it with python",
-                //        keywords: [
-                //            "time", 
-                //            "question"
-                //        ]
-                //     },
-                //     {
-                //         display_name: "How much is 2 plus 2?",
-                //         link: "https://www.google.com/search?q=How much is 2 plus 2",
-                //         keywords:[
-                //             "add",
-                //             "sum",
-                //             "+",
-                //             "2+2"
-                //         ]
-                //     }
-                // ]
-            };
-            return INFO.all_questions.map(
-                question => getQuestion(question.display_name, question.link)
-                );
+                return fileData.questions.map(
+                     question => getQuestion(question.display_name, question.link)
+                )
+              });
+            // console.log(questions);
+            // let INFO = { //TODO: find the right questions
+            //     description: "This contains all questions and their respective links",
+            //     all_questions: questions     
+            // };
+            // return INFO.all_questions.map(
+            //     question => getQuestion(question.display_name, question.link)
+            //     );
+            return []
 		}
     }, "#");
     // vscode.commands.registerCommand
@@ -252,6 +242,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 	context.subscriptions.push(finder, searcher, openBrowser, hack, showBox);
 }
-
+interface json_out{
+    questions: Array<Question>
+}
+interface Question{
+    display_name: string,
+    link: string
+}
 // this method is called when your extension is deactivated
 export function deactivate() {}
