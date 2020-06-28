@@ -34,29 +34,70 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     function updateJSON(question: any, url: any){
-        let student = { 
-            name: 'Mike',
-            age: 23, 
-            gender: 'Male',
-            department: 'English',
-            car: 'Honda' 
-        };
-         
-        let data = JSON.stringify(student);
-
         const fullPath = path.join(fileDir, 'question_map.json');
-        fs.writeFileSync(fullPath, data, function(err: any) {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log("The file was saved!");
+
+        let newQuestion = {
+            display_name: "What time is it with python",
+            link:  "https://www.google.com/search?q=What time is it with python",
+            keywords: [
+                "time", 
+                "question"
+            ]
+        };
+
+        let newData = JSON.stringify(newQuestion);
+
+        fs.readFile(fullPath, function (err: any, data: string) {
+            console.log("got into readfile");
+            if (err){ 
+                console.log("did not find file");
+                let fullData = newData;
+                console.log(fullData);
+                fs.writeFile(fullPath, fullData, function(err: any) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("The new file was saved!");
+                    }
+            }); 
+            }
+            else {
+                var json = JSON.parse(data);
+                json.push(newData);
+                let fullData = JSON.stringify(json);
+                console.log(fullData);
+                fs.writeFile(fullPath, fullData, function(err: any) {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("The file was appended to and saved!");
+                    }
+            });
+            // fs.writeFile("results.json", JSON.stringify(json))
             }
         });
+        
+        // let student = { 
+        //     name: 'Mike',
+        //     age: 23, 
+        //     gender: 'Male',
+        //     department: 'English',
+        //     car: 'Honda' 
+        // };
+         
+        // let data = JSON.stringify(student);
 
-        console.log("Should have written or not?");
+        // fs.writeFile(fullPath, newData, function(err: any) {
+        //     if(err) {
+        //         console.log(err);
+        //     } else {
+        //         console.log("The file was saved!");
+        //     }
+        // });
+        console.log("Should have written to globalStorage");
         return true;
     }
-    
+
     function showMessageBox(){
         let questionInputBox = vscode.window.createInputBox();
         questionInputBox.busy = true;
