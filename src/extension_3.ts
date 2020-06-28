@@ -203,7 +203,7 @@ export function activate(context: vscode.ExtensionContext) {
                        ]
                     }];
             
-            // const fileUri = context.globalStoragePath.with({ path: posix.join(folderUri.path, 'test.txt') });
+            // const fileUri = vscode.ExtensionContext.globalStoragePath.with({ path: posix.join(folderUri.path, 'test.txt') });
             // const fileData = await vscode.workspace.fs.readFile(fullPath);
 
             fs.readFile(fullPath, function (err: any, fileData: any) {
