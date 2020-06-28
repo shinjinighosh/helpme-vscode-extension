@@ -25,25 +25,26 @@ export function activate(context: vscode.ExtensionContext) {
         // vscode.env.openExternal(Uri.parse(url));
         console.log("vscode:"+ vscode.Uri.parse(url));
         vscode.env.openExternal(vscode.Uri.parse(url));
-
-
     })
+    function getQuestion(question: string){ //TODO: maybe point to stackoverflow instead? 
+        let browserCompleter = new vscode.CompletionItem(question);
+        browserCompleter.kind = vscode.CompletionItemKind.Event
+        browserCompleter.command = {
+            command: "helloworld.openBrowser",
+            arguments: ["https://www.google.com/search?q="+question],
+            title: "See it on the web...again?" // probably useless idk
+        }
+        return browserCompleter;
+    }
     const provider1 = vscode.languages.registerCompletionItemProvider('plaintext', {
-
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
-
-            const browserCompleter = new vscode.CompletionItem("See it on the web!");
-            browserCompleter.kind = vscode.CompletionItemKind.Event
-            browserCompleter.command = {
-                command: "helloworld.openBrowser",
-                arguments: ["https://www.google.com"],
-                title: "See it on the web...again?"
-            }
-
-			// return all completion items as array
-			return [
-                browserCompleter
-			];
+            let all_questions = [ //TODO: find the right questions
+                "What time is it?",
+                "I am tired",
+                "How much is 2+2?",
+                "lol"
+            ]
+            return all_questions.map(question=>getQuestion(question))
 		}
 	}, "#");
 
