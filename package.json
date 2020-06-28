@@ -3,10 +3,10 @@
 	"publisher": "shinjini-ghosh",
 	"displayName": "HelpMe",
 	"description": "Access frequently used helper code links without leaving VS Code",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"icon": "images/logo.png",
 	"galleryBanner": {
-		"color": "#C80000",
+		"color": "#d3d3d3",
 		"theme": "light"
 	},
 	"engines": {
