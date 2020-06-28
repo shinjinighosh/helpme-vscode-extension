@@ -57,12 +57,12 @@ export function activate(context: vscode.ExtensionContext) {
     })
     function getQuestion(question: string, link: string){ //TODO: maybe point to stackoverflow instead? 
         let browserCompleter = new vscode.CompletionItem(question);
-        browserCompleter.kind = vscode.CompletionItemKind.Event
+        browserCompleter.kind = vscode.CompletionItemKind.Event;
         browserCompleter.command = {
             command: "helloworld.openBrowser",
             arguments: [link],
             title: "See it on the web...again?" // probably useless idk
-        }
+        };
         return browserCompleter;
     }
     const hack = vscode.languages.registerCompletionItemProvider('plaintext', {
