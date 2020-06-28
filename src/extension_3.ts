@@ -4,37 +4,13 @@ import * as vscode from 'vscode';
 import { open } from 'fs';
 import path = require('path');
 import { type } from 'os';
-// import jsonfile = require('jsonfile');
-
 // this method is called when your extension is activated
-
-// your extension is activated the very first time the command is executed
-    // let questions = [
-    //     {
-    //        display_name: "What time is it with python",
-    //        link:  "https://www.google.com/search?q=What time is it with python",
-    //        keywords: [
-    //            "time", 
-    //            "question"
-    //        ]
-    //     }];
-    // fs.readFileSync(fullPath, function (err: any, fileData: any) {
-    //     console.log("reading file");
-    //     if (err) {console.error(err);}
-    //     questions = fileData.split('\r\n');
-    //     console.log(questions);
-    //     // questions = obj;
-    //     // console.log(obj);
-    //     // console.dir(obj);
-    // });
 
 export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "helloworld" is now active!');
-    // const fileDirectory = context.globalStoragePath;
-    // const fullPath = path.join(fileDirectory, 'question_map.json');
     let showBox = vscode.commands.registerCommand("helloworld.showBox", ()=>{
         showMessageBox();
     });
@@ -44,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     var fs = require('fs');
     if (!fs.existsSync(fileDir)){
-    fs.mkdirSync(fileDir);
+        fs.mkdirSync(fileDir);
     }
 
     const stopwords = ['i','me','my','myself','we','our','ours','ourselves','you','your','yours','yourself','yourselves','he','him','his','himself','she','her','hers','herself','it','its','itself','they','them','their','theirs','themselves','what','which','who','whom','this','that','these','those','am','is','are','was','were','be','been','being','have','has','had','having','do','does','did','doing','a','an','the','and','but','if','or','because','as','until','while','of','at','by','for','with','about','against','between','into','through','during','before','after','above','below','to','from','up','down','in','out','on','off','over','under','again','further','then','once','here','there','when','where','why','how','all','any','both','each','few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too','very','s','t','can','will','just','don','should','now'];
@@ -72,28 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
             link:  url,
             keywords: remove_stopwords(question)
         };
-
-        let newData = JSON.stringify(newQuestion);
         let fullData;
-        
-        console.log("new data: " + newData)
-        // fs.appendFile(fullPath, newData , function (err: any) {
-        //     if (err) {throw err;}
-        //     console.log('The new data was appended to file!');
-        //  });
-
-
-        // fs.readFile(fullPath, function (err: any, data: string) {
-        //     console.log("going into readfile");
-        //     var json = JSON.parse(data);
-        //     json.push(newData);    
-        //     fs.writeFile(fullPath, JSON.stringify(json), function(err: any){
-        //       console.log("going into write file");
-        //       if (err) {throw err;}
-        //       console.log('The data was appended to file!');
-        //     });
-        // });
-        const jsonfile = require('jsonfile');
         console.log("json file defined, starting to write")
         // jsonfile.writeFileSync(fullPath, newQuestion, { EOL:'\r\n', flag: 'a' });
         // require(fullPath)
@@ -102,20 +57,25 @@ export function activate(context: vscode.ExtensionContext) {
         fs.readFile(fullPath, function (err: any, data: string) {
             console.log("got into readfile");
             if (err){ 
+                let important_json = {
+                    description: "Here we store the questions needed with their respective links!",
+                    questions: [
+                        newQuestion
+                    ]
+                }
                 console.log("did not find file");
-                fullData = newData;
+                fullData = important_json;
             }
             else {
                 console.log("Found file");
-                var json = JSON.parse(data);
-                console.log(json);
-                json.questions.push(newData);
-                fullData = JSON.stringify(json);
+                console.log("data: "+data);
+                let json = JSON.parse(data);
+                json.questions.push(newQuestion);
+                fullData = json //JSON.stringify(json); //cannot stringify
 
-            // fs.writeFile("results.json", JSON.stringify(json))
             }
-            console.log(fullData);
-            fs.writeFile(fullPath, fullData, function(err: any) {
+            let formatted_data = JSON.stringify(fullData, null, 3); //to be more readable
+            fs.writeFile(fullPath, formatted_data, function(err: any) {
                 if(err) {
                     console.log(err);
                 } else {
@@ -123,8 +83,6 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
         });
-
-        
         console.log("Should have written to globalStorage");
         return true;
     }
@@ -153,18 +111,11 @@ export function activate(context: vscode.ExtensionContext) {
         questionInputBox.ignoreFocusOut = true;
         questionInputBox.show();
     }
-    // vscode.commands.
     let openBrowser = vscode.commands.registerCommand("helloworld.openBrowser", (url)=>{
-        // vscode.window.showInformationMessage("openeeed");
-        // vscode.env.openExternal(Uri.parse(url));
         console.log("vscode:"+ vscode.Uri.parse(url));
         vscode.env.openExternal(vscode.Uri.parse(url));
-        
-        // showMessageBox();
     });
     function getQuestion(question: string, link: string){ //TODO: maybe point to stackoverflow instead? 
-        // let question = question_obj.display_name;
-        // let link = question_obj.link;
         let browserCompleter = new vscode.CompletionItem(question);
         browserCompleter.kind = vscode.CompletionItemKind.Event;
         browserCompleter.command = {
@@ -172,6 +123,8 @@ export function activate(context: vscode.ExtensionContext) {
             arguments: [link],
             title: "See it on the web...again?" // probably useless idk
         };
+        browserCompleter.insertText ="";
+        browserCompleter.documentation = "Go to "+link;
         return browserCompleter;
     }
     const hack = vscode.languages.registerCompletionItemProvider('plaintext', {
@@ -188,48 +141,14 @@ export function activate(context: vscode.ExtensionContext) {
         }
         }, "+");
     const searcher = vscode.languages.registerCompletionItemProvider('plaintext', {
-	    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+	    async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
             const jsonfile = require('jsonfile');
             const fullPath = path.join(fileDir, 'question_map.json');
-            // const fileUri = vscode.ExtensionContext.globalStoragePath.with({ path: posix.join(folderUri.path, 'test.txt') });
-            // const fileData = await vscode.workspace.fs.readFile(fullPath);
-            // function get
-            // let all_questions = jsonfile.readFileSync(fullPath);
+            let all_questions = JSON.parse(fs.readFileSync(fullPath)); //has to be synced because the values should load before being shown
             // console.log("all questions are: "+ all_questions.questions);
-            // return all_questions.questions.map(
-            //     question => getQuestion(question.display_name, question.link)
-            // )
-            fs.readFile(fullPath, function (err, fileData) {
-                fileData = JSON.parse(fileData);
-                console.log("reading file");
-                console.log(typeof fileData["questions"]);
-                console.log(fileData["questions"])
-                
-                console.log("questions: "+fileData);
-                if (err) {console.error(err);}
-                // const questions = fileData.questions.split('\r\n');
-                // console.log(questions);
-                // Map<Object, Array<Object>> all_questions = fileData.question;
-                // let all_results = []
-                // foreach
-                // fileData.question.forEach(q => {
-                //     Object question = q;
-                //     all_result.push(getQuestion(question.display_name, question.link))
-                // });
-
-                return fileData.questions.map(
-                     question => getQuestion(question.display_name, question.link)
-                )
-              });
-            // console.log(questions);
-            // let INFO = { //TODO: find the right questions
-            //     description: "This contains all questions and their respective links",
-            //     all_questions: questions     
-            // };
-            // return INFO.all_questions.map(
-            //     question => getQuestion(question.display_name, question.link)
-            //     );
-            return []
+            return all_questions.questions.map(
+                question => getQuestion(question.display_name, question.link)
+            )
 		}
     }, "#");
     // vscode.commands.registerCommand
@@ -242,12 +161,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 	context.subscriptions.push(finder, searcher, openBrowser, hack, showBox);
 }
-interface json_out{
-    questions: Array<Question>
-}
-interface Question{
-    display_name: string,
-    link: string
-}
+// interface json_out{
+//     questions: Array<Question>
+// }
+// interface Question{
+//     display_name: string,
+//     link: string
+// }
 // this method is called when your extension is deactivated
 export function deactivate() {}
